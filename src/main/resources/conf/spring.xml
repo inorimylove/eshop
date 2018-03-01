@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:p="http://www.springframework.org/schema/p" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.2.xsd
+    http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+	http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+
+	<!-- 引入jdbc配置文件 -->
+	<context:property-placeholder location="
+		classpath:jdbc.properties,
+		classpath:redis.properties,
+		classpath:activeMQ.properties" />
+
+	<import resource="classpath:conf/spring-mybatis.xml"/>
+<!-- 	<import resource="classpath:conf/shiro/spring-shiro.xml"/>
+	<import resource="classpath:conf/spring-ActiveMQ.xml"/>
+    <import resource="classpath:conf/spring-redis.xml"/> -->
+
+	<!-- 默认的注解映射的支持，自动注册DefaultAnnotationHandlerMapping和AnnotationMethodHandlerAdapter,这个主要是作用于controller -->
+	<mvc:annotation-driven />
+	<!-- 静态资源放行 -->
+	<mvc:default-servlet-handler />
+
+	<!-- 启用spring mvc 注解 -->
+	<context:annotation-config />
+		<!-- 扫描包
+	<context:component-scan base-package="me.inori.eshop.*">
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+		<context:exclude-filter type="annotation" 
+		expression="org.springframework.stereotype.Service" />
+	</context:component-scan> -->
+	<context:component-scan base-package="me.inori.eshop" />
+	
+	<!-- 避免IE执行AJAX时,返回JSON出现下载文件 -->
+	<bean id="mappingJacksonHttpMessageConverter"
+		class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>text/html;charset=UTF-8</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 允许访问路径 -->
+	<!-- 静态资源访问 -->
+	<mvc:resources mapping="/static/**" location="/static/" /> 
+	<!-- 上传的图片资源映射 ，不是默认资源 -->
+	<mvc:resources mapping="/img/**" location="file:/var/res-demeter/img/" />
+	<mvc:resources mapping="/imgtest/**" location="file:/C:/Users/user/uploadpic/" />
+
+	<!-- 多格式文件解析器 -->
+	<!-- 感觉实际上没什么需要先注释掉了,有需求再用 -->
+	<!-- <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver"> 
+		<property name="order" value="1" /> <property name="favorParameter" value="false" 
+		/> <property name="ignoreAcceptHeader" value="true" /> <property name="mediaTypes"> 
+		<map> <entry key="json" value="application/json" /> <entry key="xml" value="application/xml" 
+		/> </map> </property> <property name="defaultViews"> <list> <bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView"></bean> 
+		<bean class="org.springframework.web.servlet.view.xml.MarshallingView"> <constructor-arg> 
+		<bean class="org.springframework.oxm.jaxb.Jaxb2Marshaller"> <property name="classesToBeBound"> 
+		<list> <value>com.model.User</value> </list> </property> </bean> </constructor-arg> 
+		</bean> </list> </property> </bean> -->
+	<!-- 上面没匹配到则会使用这个视图解析器 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<!-- <property name="order" value="2" /> -->
+		<property name="prefix" value="" />
+		<property name="suffix" value="" />
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+	</bean>
+
+	<!-- 文件上传配置 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="524288000" />
+		<property name="defaultEncoding" value="UTF-8" />
+		<property name="resolveLazily" value="true" />
+	</bean>
+
+	<!--全局异常捕捉 -->
+	<!-- 待拓展 -->
+	<!-- <bean class="com.ssm.exception.GlobalExceptionResolver" /> -->
+
+</beans>
