@@ -2,6 +2,9 @@ package me.inori.eshop.controller;
 
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -54,7 +57,7 @@ public class TestController {
 		Test test=JsonUtils.getBeanFromJson(param, Test.class);
 		
 		if(test.getId()!=0&&ToolUtils.StringNotEmpty(test.getName())){
-		testService.insertTest(test,rtv);
+		testService.insertTest(test);
 		}
 		return rtv;
 	}
@@ -64,10 +67,27 @@ public class TestController {
 	public ReturnValue rollback0() {
 		ReturnValue rtv=new ReturnValue();
 		rtv.setSuccess(false);
-		testService.rollbackTest0(1, 2, 200, rtv);
+		testService.rollbackTest0(1, 2, 200);
 		
 		return rtv;
 	}
 	
-
+	@RequestMapping(value = "/rollback1")
+	@ResponseBody
+	public ReturnValue rollback1() {
+		ReturnValue rtv=new ReturnValue();
+		rtv.setSuccess(false);
+		
+		List<Test> tests = new ArrayList<Test>();
+		Test t0=new Test();
+		t0.setId(4);
+		tests.add(t0);
+		
+		Test t1 = new Test();
+		t1.setId(0);
+		tests.add(t1);
+		testService.rollbackTest1(tests);
+		
+		return rtv;
+	}
 }

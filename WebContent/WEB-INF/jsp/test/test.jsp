@@ -19,6 +19,8 @@
 </form>
 <input type="button" id="btn1"
  value="多次操作数据的回滚"/> 
+ <input type="button" id="btn2"
+ value="一次操作多数据的回滚"/>
  <script type="text/javascript" src="<%=path%>/static/js/third/jquery-1.12.4.min.js"></script>
 <script type="text/javascript">
       $(function(){
@@ -44,6 +46,18 @@
              $.ajax({
                type:"POST",
                url:"<%=path%>/test/rollback0",
+               dataType: 'json',  
+               contentType:'application/json;charset=UTF-8',  
+               success:function(data){ 
+               //解析对象
+               alert(data.message);
+               }
+             });
+         });
+         $("#btn2").click(function(){
+             $.ajax({
+               type:"POST",
+               url:"<%=path%>/test/rollback1",
                dataType: 'json',  
                contentType:'application/json;charset=UTF-8',  
                success:function(data){ 

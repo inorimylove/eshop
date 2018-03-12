@@ -1,11 +1,13 @@
 package me.inori.eshop.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import me.inori.base.Utils.ToolUtils;
 import me.inori.base.common.Constant;
-import me.inori.base.entity.ReturnValue;
+import me.inori.base.exception.MyException;
 import me.inori.eshop.dao.TestDao;
 import me.inori.eshop.entity.test.Test;
 import me.inori.eshop.entity.test.TestRollBack;
@@ -18,21 +20,19 @@ public class TestServiceImpl implements TestService{
 	
 	@Transactional
 	@Override
-	public void insertTest(Test item,ReturnValue rtv) {
+	public void insertTest(Test item) {
 		// TODO Auto-generated method stub
 		try{
 			testDao.insertTest(item);
-			rtv.setMessage(Constant.STR_SAVE_S);
 		}catch (Exception e){
 			e.printStackTrace();
-			rtv.setSuccess(false);
-			rtv.setMessage(ToolUtils.GetErrorMessage(e, Constant.STR_SAVE_F));
+			throw new MyException(ToolUtils.GetErrorMessage(e, Constant.STR_SAVE_F));
 		}
 	}
 	
 	@Transactional
 	@Override
-	public void rollbackTest0(int idin, int idout, int money,ReturnValue rtv) {
+	public void rollbackTest0(int idin, int idout, int money) {
 		
 		// TODO Auto-generated method stub
 		TestRollBack item0 = new TestRollBack();
@@ -45,13 +45,22 @@ public class TestServiceImpl implements TestService{
 		
 		try{
 			testDao.inMoney(item0);
-			int i = 1/0;
+//			int i = 1/0;
 			testDao.outMoney(item1);
-			rtv.setMessage(Constant.STR_SAVE_S);
 		}catch (Exception e){
 			e.printStackTrace();
-			rtv.setSuccess(false);
-			rtv.setMessage(ToolUtils.GetErrorMessage(e, Constant.STR_SAVE_F));
+			throw new MyException(ToolUtils.GetErrorMessage(e, Constant.STR_SAVE_F));
+		}
+	}
+
+	@Override
+	public void rollbackTest1(List<Test> list) {
+		// TODO Auto-generated method stub
+		try{
+			testDao.insertTest2(list);
+		}catch (Exception e){
+			e.printStackTrace();
+//			throw new MyException(ToolUtils.GetErrorMessage(e, Constant.STR_SAVE_F));
 		}
 	}
 

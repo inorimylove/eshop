@@ -1,5 +1,7 @@
 package me.inori.eshop.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import me.inori.eshop.entity.test.Test;
@@ -12,4 +14,6 @@ public interface TestDao {
 	
 	public void inMoney(TestRollBack item);
 	public void outMoney(TestRollBack item);
+	
+	public void insertTest2(List<Test> item);
 }

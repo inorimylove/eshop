@@ -1,14 +1,16 @@
 package me.inori.eshop.service;
 
-import org.springframework.stereotype.Service;
+import java.util.List;
 
-import me.inori.base.entity.ReturnValue;
+import org.springframework.stereotype.Service;
 import me.inori.eshop.entity.test.Test;
 
 @Service
 public interface TestService {
 	
-	public void insertTest(Test item,ReturnValue rtv);
+	public void insertTest(Test item);
 	
-	public void rollbackTest0(int idin,int idout,int money,ReturnValue rtv);
+	public void rollbackTest0(int idin,int idout,int money);
+	
+	public void rollbackTest1(List<Test> list);
 }
